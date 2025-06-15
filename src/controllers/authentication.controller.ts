@@ -5,6 +5,7 @@ import UserModel, { User } from '../models/user.model'
 // import { AuthRequest } from '../types/authRequest'
 require('dotenv').config();
 
+
 //JWT
 const { ACCESS_TOKEN_SECRET } = process.env;
 

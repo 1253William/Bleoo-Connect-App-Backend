@@ -13,12 +13,12 @@ const app = express();
 //Middlewares
 app.use(express.json());
 
-app.get('/', (_req, res) => {
-    res.send('Welcome to BLEOO Connect API');
-});
-
 //routes
 app.use("/api/v1", rootRouter);
+
+app.get('/', (_req, res) => {
+    res.send('Server Health Check: OK');
+});
 
 const PORT = parseInt(process.env.PORT as string, 10) || 5000;
 
