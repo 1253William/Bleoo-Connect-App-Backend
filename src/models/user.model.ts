@@ -12,7 +12,7 @@ export type User = Document & {
     studentStatus: 'Alumni' | 'Non-Alumni';
     yearGroup: string;
     occupation: string;
-    class: string;
+    yearClass: string;
     residency: 'boarder' | 'non-boarder';
     hall: 'Alema/Michigan Hall' |'Peter Alan Adejetey Hall' | 'Ellen Hall' | 'Awuletey Hall' | 'Halm Addo Hall' | 'Nana Wereko Ampeng Hall' | 'NASH/GetFund Hall';
     affiliatedGroups: string[];
@@ -60,6 +60,7 @@ const UserSchema: Schema<User> = new Schema(
             type: String,
             enum: ['Alumni', 'Non-Alumni'],
             default: 'Alumni',
+            required: true,
         },
         yearGroup: {
             type: String,
@@ -69,7 +70,7 @@ const UserSchema: Schema<User> = new Schema(
             type: String,
             default: 'Professional Software Engineer',
         },
-        class: {
+        yearClass: {
             type: String,
             default: '1 General Science',
         },

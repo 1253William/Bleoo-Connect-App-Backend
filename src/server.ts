@@ -1,8 +1,11 @@
 import express from 'express';
-
 import dotenv from 'dotenv';
+import morgan from 'morgan';
+import helmet from 'helmet';
+import cors from 'cors';
 import rootRouter from "./routes/index.route";
 import connectDB from "./config/db";
+
 dotenv.config();
 
 //Database Connection
@@ -12,10 +15,20 @@ const app = express();
 
 //Middlewares
 app.use(express.json());
+app.use(cors());
+app.use(helmet());
+app.use(morgan('dev'));
+
+//CORS
+app.use(
+    cors({
+        origin: (_origin, callback) => callback(null, true),
+        credentials: true,
+    })
+);
 
 //routes
 app.use("/api/v1", rootRouter);
-
 app.get('/', (_req, res) => {
     res.send('Server Health Check: OK');
 });

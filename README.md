@@ -3,7 +3,7 @@ The official backend for the **Bleoo Connect App**, a platform that unites Accra
 
 
 Built with:
-- Node.js + Express.js _ TypeScript
+- Node.js + Express.js + TypeScript
 - MongoDB (Mongoose)
 - Socket.IO (Realtime Messaging)
 - Authentication & Notifications

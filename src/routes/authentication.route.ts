@@ -1,8 +1,8 @@
 import express from "express";
 const router = express.Router();
-import { register } from "../controllers/authentication.controller";
-// import { authMiddleware } from "../middlewares/auth.middleware";
-// import { authorizedRoles } from "../middlewares/roles.middleware";
+import { register, login } from "../controllers/authentication.controller";
+import { authMiddleware } from "../middlewares/authentication.middleware";
+import { authorizedRoles } from "../middlewares/roles.middleware";
 
 /**
  * @swagger
@@ -20,35 +20,13 @@ import { register } from "../controllers/authentication.controller";
  *             type: object
  *             required:
  *               - fullName
+ *               - userName
+ *               - studentStatus
  *               - email
  *               - password
- *             properties:
- *               fullName:
- *                 type: string
- *                 example: "Jane Doe"
- *               email:
- *                 type: string
- *                 format: email
- *                 example: "jane.doe@example.com"
- *               password:
- *                 type: string
- *                 format: password
- *                 example: "SecurePass123!"
- *               role:
- *                 type: string
- *                 example: "Recruiter"
- *               isAccountDeleted:
- *                 type: boolean
- *                 example: false
- *               companyName:
- *                 type: string
- *                 example: "TechHive Ltd."
- *               companyEmail:
- *                 type: string
- *                 example: "careers@techhive.com"
  *     responses:
  *       201:
- *         description: User created successfully
+ *         description: User registered successfully
  *       200:
  *         description: Account restored successfully
  *       400:
@@ -114,88 +92,16 @@ router.post('/register', register);
 //@route POST /api/v1/auth/login
 //@desc Login a user
 //@access public
-// router.post('/login', login);
+router.post('/login', login);
 
-/**
- * @swagger
- * /api/v1/auth/me:
- *   get:
- *     tags:
- *       - Authentication
- *     summary: Get logged-in user
- *     description: Returns the details of the currently authenticated user.
- *     security:
- *       - bearerAuth: []
- *     responses:
- *       200:
- *         description: Successfully retrieved user details.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: true
- *                 data:
- *                   type: object
- *                   properties:
- *                     _id:
- *                       type: string
- *                       example: "642fc5365ebf3ab83d7d501a"
- *                     fullName:
- *                       type: string
- *                       example: "Jane Doe"
- *                     email:
- *                       type: string
- *                       example: "jane@example.com"
- *                     role:
- *                       type: string
- *                       example: "Applicant"
- *                     isAccountDeleted:
- *                        type: boolean
- *                        example: false
- *       401:
- *         description: Unauthorized, missing or invalid token.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 success:
- *                   type: boolean
- *                   example: false
- *                 message:
- *                   type: string
- *                   example: "Unauthorized"
- *       500:
- *         description: Internal Server Error.
- */
-//@route POST /api/v1/auth/me
-//@desc Get Data/Profile/Details of Logged-in user
-//@access public
-// router.post('/me', authMiddleware, authorizedRoles("Recruiter", "Applicant"), userData);
 
-/**
- * @swagger
- * /api/v1/auth/logout:
- *   post:
- *     tags:
- *       - Authentication
- *     summary: Log Out User
- *     description: Logs out the user by clearing the session or token on the client side (if applicable).
- *     responses:
- *       200:
- *         description: User logged out successfully
- *       500:
- *         description: Internal Server Error
- */
-//@route POST /api/v1/auth/logout
-//@desc Logout a user
+//@route POST /api/v1/auth/forgot-password
+//@desc reset password when not logged in
 //@access public
-// router.post('/logout', authMiddleware, authorizedRoles("Recruiter"), logout)
+// router.post('/forgot-password', forgotPassword)
 
 //Option for uploading profile photo
 //Add user profile icon/photo
+
 
 export default router;

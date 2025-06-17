@@ -2,7 +2,7 @@ import {Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import UserModel, { User } from '../models/user.model'
-// import { AuthRequest } from '../types/authRequest'
+import { AuthRequest } from '../types/authRequest'
 require('dotenv').config();
 
 
@@ -19,13 +19,27 @@ if (!ACCESS_TOKEN_SECRET) {
 //@access Public
 export const register = async ( req: Request, res: Response): Promise<void> => {
     try {
-        const { fullName, userName, email, password, role, isAccountDeleted } = req.body;
+        const {
+            fullName,
+            userName,
+            email,
+            password,
+            profileImage,
+            studentStatus,
+            yearGroup,
+            occupation,
+            yearClass,
+            residency,
+            hall,
+            affiliatedGroups,
+            role,
+            isAccountDeleted } = req.body;
 
         //Validation
-        if (!fullName || !email || !password) {
+        if (!fullName || !email || !password || !studentStatus) {
             res.status(400).json({
                 success: false,
-                message: "Full Name, Email, Password are required"
+                message: "Full Name, Email, Student Status, Password are required"
             });
             return
         }
@@ -59,7 +73,7 @@ export const register = async ( req: Request, res: Response): Promise<void> => {
         //Check for existing user
         const existingUser = await UserModel.findOne({ email }) as User;
         if (existingUser) {
-            // Restore user's account if it was deleted
+            //Restore the user's account if it was deleted
             if (existingUser.isAccountDeleted) {
                 existingUser.isAccountDeleted = false;
                 await existingUser.save();
@@ -70,7 +84,6 @@ export const register = async ( req: Request, res: Response): Promise<void> => {
                 });
                 return;
             }
-
             res.status(400).json({
                 success: false,
                 message: 'User already exists, try logging in.',
@@ -89,6 +102,14 @@ export const register = async ( req: Request, res: Response): Promise<void> => {
             password: hashedPassword,
             role,
             userName,
+            profileImage,
+            studentStatus,
+            yearGroup,
+            occupation,
+            yearClass,
+            residency,
+            hall,
+            affiliatedGroups,
             isAccountDeleted
         });
 
@@ -97,7 +118,7 @@ export const register = async ( req: Request, res: Response): Promise<void> => {
         delete userWithoutPassword.password;
         res.status(201).json({
             success: true,
-            message: "User created successfully",
+            message: "User registered successfully",
             data: userWithoutPassword
         });
 
@@ -107,3 +128,76 @@ export const register = async ( req: Request, res: Response): Promise<void> => {
         return
     }
 }
+
+
+//@route POST /api/v1/auth/login
+//@desc Login User (JWT authentication with access token)
+//@access Public
+export const login = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const {email, password} = req.body;
+
+        //Validation
+        if (!email || !password) {
+            res.status(400).json({
+                success: false,
+                message: "All fields are required"
+            });
+            return
+        }
+
+        //Check for existing user
+        const existingUser = await UserModel.findOne({email}).select('+password');
+        if (!existingUser) {
+            res.status(400).json({
+                success: false,
+                message: "User not found, Please sign up"
+            });
+            return
+        }
+
+        if (existingUser.isAccountDeleted) {
+            res.status(404).json({
+                success: false,
+                message: "Account has been deleted, please sign up again.",
+                data: existingUser
+            });
+            return;
+        }
+
+        //Check Password
+        const validPassword = await bcrypt.compare(password, existingUser.password);
+        if (!validPassword) {
+            res.status(400).json({
+                success: false,
+                message: "Invalid credentials"
+            });
+            return
+        }
+
+        //Create JWT Token
+        const accessToken = jwt.sign({
+            userId: existingUser._id,
+            email: existingUser.email,
+            role: existingUser.role
+        }, ACCESS_TOKEN_SECRET as string, {expiresIn: '15m'});
+
+        //Remove password before sending a response
+        const userWithoutPassword = existingUser.toObject() as any;
+        delete userWithoutPassword.password;
+
+        res.status(200).json({
+            success: true,
+            message: "User logged in successfully",
+            accessToken,
+            data: userWithoutPassword
+        });
+
+    } catch (error: unknown) {
+        console.log({message: "Error logging in user", error: error});
+        res.status(500).json({success: false, error: "Internal Server Error"});
+        return
+    }
+}
+
+

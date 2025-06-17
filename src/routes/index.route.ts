@@ -1,6 +1,6 @@
 import express from "express";
 import authRouter from "./authentication.route";
-// import refreshRouter from "./refreshToken.route";
+import userRouter from "./user.route";
 
 
 const rootRouter = express.Router();
@@ -9,10 +9,8 @@ const rootRouter = express.Router();
 //authentication routes
 rootRouter.use('/auth',authRouter);
 
-//metrics routes
-// rootRouter.use(metricsRouter)
-
-
+//user routes
+rootRouter.use('/status',userRouter);
 
 
 export default rootRouter;
