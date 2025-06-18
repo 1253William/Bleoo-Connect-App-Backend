@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import SwaggerUi from 'swagger-ui-express';
-import SwaggerSpec from 'swagger-jsdoc';
+import SwaggerSpec from './services/swagger';
 import rootRouter from "./routes/index.route";
 import connectDB from "./config/db";
 
