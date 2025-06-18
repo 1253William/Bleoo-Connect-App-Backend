@@ -16,6 +16,7 @@ export type User = Document & {
     residency: 'boarder' | 'non-boarder';
     hall: 'Alema/Michigan Hall' |'Peter Alan Adejetey Hall' | 'Ellen Hall' | 'Awuletey Hall' | 'Halm Addo Hall' | 'Nana Wereko Ampeng Hall' | 'NASH/GetFund Hall';
     affiliatedGroups: string[];
+    passwordChangedAt?: Date;
     isAccountDeleted?: boolean;
     createdAt?: Date;
     updatedAt?: Date;
@@ -86,6 +87,9 @@ const UserSchema: Schema<User> = new Schema(
         },
         affiliatedGroups: {
             type: [String],
+        },
+        passwordChangedAt: {
+            type: Date,
         },
         isAccountDeleted: {
             type: Boolean,

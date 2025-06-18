@@ -30,7 +30,7 @@ export const sendEmail = async ({ email, subject, text}:EmailOptions): Promise<n
             console.log('SMTP Connection Successful!');
 
             const mailOptions = {
-                from: `"Support Team" <${process.env.EMAIL_USER}>`,
+                from: `"Bleoo Support Team" <${process.env.EMAIL_USER}>`,
                 to: email,
                 subject,
                 text,
@@ -43,5 +43,7 @@ export const sendEmail = async ({ email, subject, text}:EmailOptions): Promise<n
     } catch (error) {
         throw new Error(`Error sending email: ${error}`);
     }
-};
+}
+
+
 

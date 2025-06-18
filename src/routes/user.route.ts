@@ -9,7 +9,7 @@ import { authorizedRoles } from "../middlewares/roles.middleware";
  * /api/v1/status/profile:
  *   get:
  *     tags:
- *       - Authentication
+ *       - User
  *     summary: Get logged-in user
  *     description: Returns the details of the currently authenticated user.
  *     security:
