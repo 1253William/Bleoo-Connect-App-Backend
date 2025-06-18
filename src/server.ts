@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
+import SwaggerUi from 'swagger-ui-express';
+import SwaggerSpec from 'swagger-jsdoc';
 import rootRouter from "./routes/index.route";
 import connectDB from "./config/db";
 
@@ -18,6 +20,7 @@ app.use(express.json());
 app.use(cors());
 app.use(helmet());
 app.use(morgan('dev'));
+app.use('/api-docs', SwaggerUi.serve, SwaggerUi.setup(SwaggerSpec));
 
 //CORS
 app.use(

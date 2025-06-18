@@ -1,8 +1,7 @@
 import express from "express";
 const router = express.Router();
 import { register, login } from "../controllers/authentication.controller";
-import { authMiddleware } from "../middlewares/authentication.middleware";
-import { authorizedRoles } from "../middlewares/roles.middleware";
+
 
 /**
  * @swagger
