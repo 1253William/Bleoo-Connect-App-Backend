@@ -5,10 +5,14 @@ export type User = Document & {
     userName: string;
     email: string;
     password: string; // null for social logins
-    googleId: String,     // if signed in with Google
-    appleId: String,      // if signed in with Apple
-    profileImage: String,
+    googleId: String;    // if signed in with Google
+    appleId: String;     // if signed in with Apple
+    profileImage: String;
+    backgroundImage: String;
+    About: String;
     role: 'User' | 'Admin';
+    following: string[];
+    followers: string[];
     studentStatus: 'Alumni' | 'Non-Alumni';
     yearGroup: string;
     occupation: string;
@@ -16,6 +20,7 @@ export type User = Document & {
     residency: 'boarder' | 'non-boarder';
     hall: 'Alema/Michigan Hall' |'Peter Alan Adejetey Hall' | 'Ellen Hall' | 'Awuletey Hall' | 'Halm Addo Hall' | 'Nana Wereko Ampeng Hall' | 'NASH/GetFund Hall';
     affiliatedGroups: string[];
+    posts: mongoose.Types.ObjectId;
     passwordChangedAt?: Date;
     isAccountDeleted?: boolean;
     createdAt?: Date;
@@ -52,10 +57,26 @@ const UserSchema: Schema<User> = new Schema(
             type: String,
             default: 'https://res.cloudinary.com/dxfq3iotg/image/upload/v1646434233/user_profile/default_profile_image_q5j98z.png'
         },
+        backgroundImage: {
+            type: String,
+            default: 'https://res.cloudinary.com/dxfq3iotg/image/upload/v1646434233/user_profile/default_profile_image_q5j98z.png'
+        },
+        About: {
+            type: String,
+            default: 'Write something about yourself here.'
+        },
         role: {
             type: String,
             enum: ['User', 'Admin'],
             default: 'User',
+        },
+        following:{
+            type: [String], //Change this later properly
+            default: [],
+        },
+        followers:{
+            type: [String], //Change this later properly
+            default: [],
         },
         studentStatus: {
             type: String,
@@ -87,6 +108,10 @@ const UserSchema: Schema<User> = new Schema(
         },
         affiliatedGroups: {
             type: [String],
+        },
+        posts: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Post'
         },
         passwordChangedAt: {
             type: Date,

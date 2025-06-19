@@ -1,11 +1,12 @@
 import {Request, Response} from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import UserModel, { User } from '../models/user.model';
+import UserModel, {User} from '../models/user.model';
 import generateOTP from '../utils/OTP';
 import OTPVerification from '../models/OTPVerification.model';
-import { CustomJwtPayload } from '../types/authRequest';
+import {CustomJwtPayload} from '../types/authRequest';
 import {sendEmail} from '../utils/email.transporter';
+
 require('dotenv').config();
 
 
@@ -163,7 +164,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
             res.status(404).json({
                 success: false,
                 message: "Account has been deleted, please sign up again.",
-                data: existingUser
             });
             return;
         }
@@ -343,7 +343,7 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
 
         //Extract tempToken from the Authorization header
         const tempToken = authHeader.split(" ")[1];
-        
+
         // const decodedToken = jwt.verify(tempToken, ACCESS_TOKEN_SECRET);
         // const decoded = decodedToken as unknown as CustomJwtPayload;
         let decoded: CustomJwtPayload;
@@ -377,9 +377,7 @@ export const resetPassword = async (req: Request, res: Response): Promise<void> 
         }
 
         const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        user.password = hashedPassword;
+        user.password = await bcrypt.hash(newPassword, salt);
         user.passwordChangedAt = new Date(Date.now());
         await user.save();
 

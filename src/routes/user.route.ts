@@ -1,6 +1,12 @@
 import express from "express";
 const router = express.Router();
-import { userData } from "../controllers/user.controller";
+import {
+    changePassword,
+    deleteAccount,
+    updateProfile,
+    userData,
+    viewPublicProfile
+} from "../controllers/user.controller";
 import { authMiddleware } from "../middlewares/authentication.middleware";
 import { authorizedRoles } from "../middlewares/roles.middleware";
 
@@ -10,7 +16,7 @@ import { authorizedRoles } from "../middlewares/roles.middleware";
  *   get:
  *     tags:
  *       - User
- *     summary: Get logged-in user
+ *     summary: Get logged-in user data/profile (Get your own profile)
  *     description: Returns the details of the currently authenticated user.
  *     security:
  *       - bearerAuth: []
@@ -60,10 +66,217 @@ import { authorizedRoles } from "../middlewares/roles.middleware";
  *         description: Internal Server Error.
  */
 //@route GET /api/v1/status/profile
-//@desc Get Data/Profile/Details of Logged-in user
-//@access public
+//@desc Get Data/Profile/Details of Logged-in user (Get your own profile)
+//@access private
 router.get('/profile', authMiddleware, authorizedRoles("User"), userData);
 
+
+/**
+ * @swagger
+ * /api/v1/status/users/:username:
+ *   get:
+ *     tags:
+ *       - User
+ *     summary: View a user's public profile
+ *     description: Fetches the public profile of a user using their username.
+ *     parameters:
+ *       - in: path
+ *         name: username
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Unique username of the user
+ *     responses:
+ *       200:
+ *         description: Public profile data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     fullName:
+ *                       type: string
+ *                     userName:
+ *                       type: string
+ *                     yearGroup:
+ *                       type: string
+ *                     profession:
+ *                       type: string
+ *                     About:
+ *                       type: string
+ *                     profileImage:
+ *                       type: string
+ *                     backgroundImage:
+ *                       type: string
+ *                     affiliatedGroups:
+ *                       type: array
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
+ */
+//@route GET /api/v1/status/users/:username
+//@desc Get or View another user’s public profile
+//@access private
+router.get('/users/:username', authMiddleware, authorizedRoles("User"), viewPublicProfile);
+
+/**
+ * @swagger
+ * /api/v1/status/profile:
+ *   put:
+ *     tags:
+ *       - User
+ *     summary: Update user's profile
+ *     description: Updates the authenticated user's public profile information.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               fullName:
+ *                 type: string
+ *               userName:
+ *                 type: string
+ *               yearGroup:
+ *                 type: string
+ *               occupation:
+ *                 type: string
+ *               About:
+ *                 type: string
+ *               profileImage:
+ *                 type: string
+ *                 format: uri
+ *               backgroundImage:
+ *                 type: string
+ *                 format: uri
+ *               affiliatedGroups:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: User profile updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: object
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
+ */
+//@route PUT /api/v1/status/profile
+//@desc Update profile (fullName, userName, profileImage/avatar, bio/About, etc.)
+//@access private
+router.put('/profile', authMiddleware, authorizedRoles("User"), updateProfile);
+
+/**
+ * @swagger
+ * /api/v1/status/update/password:
+ *   put:
+ *     tags:
+ *       - User
+ *     summary: Change user password
+ *     description: Allows an authenticated user to change their password using the current password.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - oldPassword
+ *               - newPassword
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: "OldPass123!"
+ *               newPassword:
+ *                 type: string
+ *                 format: password
+ *                 example: "NewSecurePass456!"
+ *     responses:
+ *       200:
+ *         description: Password updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *       400:
+ *         description: Validation or password mismatch error
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
+ */
+//@route PUT /api/v1/status/update/password
+//@desc Change password (when logged in)
+//@access private
+router.put('/update/password', authMiddleware, authorizedRoles("User"), changePassword);
+
+/**
+ * @swagger
+ * /api/v1/status/account/delete:
+ *   delete:
+ *     tags:
+ *       - User
+ *     summary: Delete (soft delete) user account
+ *     description: Marks the authenticated user's account as deleted.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Account deleted successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *       401:
+ *         description: Unauthorized
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal Server Error
+ */
+//@route DELETE	/api/v1/status/account/delete
+//@desc Deactivate/Delete account (Soft Delete)
+//@access private
+router.delete('/account/delete', authMiddleware, authorizedRoles("User"), deleteAccount);
 
 
 

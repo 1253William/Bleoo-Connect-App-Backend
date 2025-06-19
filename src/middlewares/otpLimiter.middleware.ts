@@ -17,7 +17,7 @@ export const otpVerifyLimiter = rateLimit({
     limit: (req, res) => 2, // Limit OTP verification attempts
     message: {
         success: false,
-        message: 'Too many verification attempts. Please try again later.',
+        message: 'Too many verification attempts. Please try again in 10 minutes.',
     },
     standardHeaders: true,
     legacyHeaders: false,
