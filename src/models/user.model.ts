@@ -11,8 +11,8 @@ export type User = Document & {
     backgroundImage: String;
     About: String;
     role: 'User' | 'Admin';
-    following: string[];
-    followers: string[];
+    following:  mongoose.Types.ObjectId[];
+    followers:  mongoose.Types.ObjectId[];
     studentStatus: 'Alumni' | 'Non-Alumni';
     yearGroup: string;
     occupation: string;
@@ -70,14 +70,8 @@ const UserSchema: Schema<User> = new Schema(
             enum: ['User', 'Admin'],
             default: 'User',
         },
-        following:{
-            type: [String], //Change this later properly
-            default: [],
-        },
-        followers:{
-            type: [String], //Change this later properly
-            default: [],
-        },
+        followers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+        following: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
         studentStatus: {
             type: String,
             enum: ['Alumni', 'Non-Alumni'],

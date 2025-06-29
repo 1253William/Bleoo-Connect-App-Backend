@@ -5,25 +5,25 @@ The official backend for the **Bleoo Connect App**, a platform that unites Accra
 Built with:
 - Node.js + Express.js + TypeScript
 - MongoDB (Mongoose)
-- Socket.IO (Realtime Messaging)
+- Socket.IO (Realtime Messaging and Notifications)
 - Authentication & Notifications
 
 ---
 
-## 🚀 Features
+## Features
 
-- 🔐 User Authentication (Email)
-- 📢 News Feed for updates, posts, and announcements
-- 👥 Alumni Groups by year, interest, profession
-- 💬 Real-time Chat (1-on-1 and Group Messaging)
-- 📅 Event Management & Notifications
-- 🧑‍🎓 Mentorship matchmaking
-- 🎯 Business & Career Networking
-- 🔔 Socket.io Push Notifications
+- User Authentication (Email)
+- News Feed for updates, posts, and announcements
+- Alumni Groups by year, interest, profession
+- Real-time Chat (1-on-1 and Group Messaging)
+- Event Management & Notifications
+- Mentorship matchmaking
+- Business & Career Networking
+- Socket.io Push Notifications
 
 ---
 
-## 🧱 Project Structure
+## Project Structure
 
 src/
 ├── config # Database & Firebase setup

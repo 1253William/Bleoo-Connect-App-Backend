@@ -16,7 +16,7 @@ const options = {
         },
         license: {
             name: "MIT License",
-            url: "https://github.com/1253William/Applicant-Tracking-System-Backend?tab=MIT-1-ov-file#readme",
+            url: "https://github.com/1253William/bleoo-connect-app-backend?tab=MIT-1-ov-file#readme",
         },
         servers: [
             {
@@ -24,7 +24,7 @@ const options = {
                 description: "Development server",
             },
             {
-                url: "https://applicant-tracking-system-backend-aqpr.onrender.com",
+                url: "https://bleoo-connect-app-backend.onrender.com",
                 description: "Live server"
             }
         ],
